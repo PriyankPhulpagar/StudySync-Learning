@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySync Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* General layout */
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: #6366F1;
+            color: #fff;
+        }
+
+        .nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-button {
+            background: #fff;
+            color: #6366F1;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .dashboard-hero {
+            background: #eef2ff;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Courses layout */
+        .course-container,
+        .enrolled-course-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .course-card,
+        .enrolled-course-card {
+            flex: 0 0 220px;
+            /* Fixed width of 200px */
+            background: #fff;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: <%=cardColor %>;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .enroll-button {
+            margin-top: 0.5rem;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: <%=cardColor %>;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .no-courses-msg {
+            font-style: italic;
+            color: #555;
+        }
+
+        /* Recommended courses */
+        .recommended-container {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .recommended-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .recommended-card {
+            flex: 1 1 250px;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            text-decoration: none;
+            color: <%=cardColor %>;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer-container {
+            margin-top: 2rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            background: #6366F1;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header-content">
+        <a href="/" class="logo">
+            <img src="/Images/StudySyn.svg" alt="logo" class="logo-icon">
+            <span class="logo-text">StudySync</span>
+        </a>
+        <nav class="nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/blogs" class="nav-link">Blog</a>
+            <a href="/about" class="nav-link">About</a>
+        </nav>
+        <a href="/logout" class="contact-button">Logout</a>
+    </header>
+
+    <!-- DASHBOARD HERO -->
+    <section class="dashboard-hero">
+        <h1>Welcome <%= user.name %> 👋</h1>
+        <p>Track your learning progress</p>
+        <div class="stats-container">
+            <div class="stat-card">
+                <h2>
+                    <%= stats.courses_enrolled %>
+                </h2>
+                <p>Courses Enrolled</p>
+            </div>
+            <div class="stat-card">
+                <h2>
+                    <%= stats.hours_spent %>
+                </h2>
+                <p>Hours Spent</p>
+            </div>
+            <div class="stat-card">
+                <h2>
+                    <%= stats.completed_courses %>
+                </h2>
+                <p>Completed Courses</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ENROLLED COURSES -->
+    <section class="dashboard-section">
+        <h2 style="margin-top: 2rem;">Your Enrolled Courses</h2>
+        <div class="enrolled-course-container">
+            <% if (enrolledCourses.length===0) { %>
+                <p class="no-courses-msg">You have not enrolled in any courses yet.</p>
+                <% } %>
+
+                    <% enrolledCourses.forEach(course=> {
+                        const progress = course.total_hours ? Math.min(100, (course.completed_hours /
+                        course.total_hours) * 100) : 0;
+                        %>
+                        <div class="enrolled-course-card">
+                            <h3>
+                                <%= course.title %>
+                            </h3>
+                            <p>Completed Hours: <%= course.completed_hours %> / <%= course.total_hours %>
+                            </p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: <%= progress %>%"></div>
+                            </div>
+                            <% if (progress>= 100) { %>
+                                <p style="color: green; font-weight: bold; margin-top: 0.5rem;">Completed ✅</p>
+                                <% } %>
+                        </div>
+                        <% }) %>
+        </div>
+    </section>
+
+    <!-- AVAILABLE COURSES -->
+    <section class="dashboard-section">
+        <h2 style="margin-top: 2rem; ">Available Courses</h2>
+        <div class="course-container">
+            <% allCourses.forEach(course=> {
+                const isEnrolled = enrolledCourses.some(ec => ec.course_id === course.id);
+                %>
+                <div class="course-card">
+                    <h3>
+                        <%= course.title %>
+                    </h3>
+                    <p>Total Hours: <%= course.total_hours %>
+                    </p>
+                    <% if (!isEnrolled) { %>
+                        <button class="enroll-button" onclick="enrollCourse(<%= course.id %>)">Enroll</button>
+                        <% } else { %>
+                            <span style="color: green; font-weight: bold;">Enrolled</span>
+                            <% } %>
+                </div>
+                <% }) %>
+        </div>
+    </section>
+
+    <!-- RECOMMENDED COURSES -->
+    <section class="recommended-container">
+        <h2 class="section-title">Recommended Courses</h2>
+        <div class="recommended-grid">
+            <% recommended.forEach(course=> { %>
+                <div class="recommended-card">
+                    <h3 class="course-title">
+                        <%= course.title %>
+                    </h3>
+                    <p class="course-desc">
+                        <%= course.description %>
+                    </p>
+                    <a href="#" class="course-link">Visit Site</a>
+                </div>
+                <% }) %>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div class="footer-container">
+        <footer class="footer">
+            &copy; 2025 StudySync. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        async function enrollCourse(courseId) {
+            try {
+                const res = await fetch("/api/enroll", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ courseId })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Enrolled successfully!");
+                    window.location.reload();
+                } else {
+                    alert(data.msg || "Error enrolling");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Server error");
+            }
+        }
+    </script>
+</body>
+
+</html>

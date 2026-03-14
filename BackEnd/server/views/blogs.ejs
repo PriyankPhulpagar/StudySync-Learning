@@ -1,0 +1,182 @@
+<h1 style="text-align:center; margin-top:2rem;">StudySync Blog</h1>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blog List</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f6f8fc;
+      color: #111827;
+    }
+
+    /* Page Title */
+    .page-header {
+      width: 85%;
+      margin: 40px auto 20px;
+    }
+
+    .page-header h1 {
+      font-size: 36px;
+      font-weight: 700;
+    }
+
+    .page-header span {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    /* Blog Grid */
+    .blog-container {
+      width: 85%;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      padding-bottom: 50px;
+    }
+
+    /* Blog Card */
+    .blog-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+
+    /* Image */
+    .blog-image {
+      position: relative;
+    }
+
+    .blog-image img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .date-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: white;
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Content */
+    .blog-content {
+      padding: 22px;
+    }
+
+    .blog-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #6366f1;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .blog-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .blog-excerpt {
+      font-size: 15px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .read-more {
+      font-size: 14px;
+      font-weight: 600;
+      color: #6366f1;
+      text-decoration: none;
+    }
+
+    .read-more:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <span>BlogSpot</span>
+    <h1>Best of the Week</h1>
+  </div>
+
+  <!-- Blog List -->
+  <div class="blog-container">
+    <% blogs.forEach(blog => { %>
+      <div class="blog-card">
+
+        <% if (blog.image_url) { %>
+          <div class="blog-image">
+            <img src="<%= blog.image_url %>" alt="<%= blog.title %>">
+            <span class="date-badge">
+              <%= blog.created_at ? new Date(blog.created_at).toDateString() : 'New' %>
+            </span>
+          </div>
+        <% } %>
+
+        <div class="blog-content">
+          <span class="blog-tag">Blog</span>
+
+          <h2 class="blog-title"><%= blog.title %></h2>
+
+          <p class="blog-excerpt">
+            <%= blog.content.substring(0, 140) %>...
+          </p>
+
+          <a href="/blogs/<%= blog.id %>" class="read-more">
+            Read More →
+          </a>
+        </div>
+
+      </div>
+    <% }) %>
+  </div>
+
+</body>
+</html>
+
+<p style="text-align:center; margin-top:2rem;">
+  <a href="/" style="color:#6366F1; font-weight:bold; text-decoration:none;">← Back to Home</a>
+</p>
